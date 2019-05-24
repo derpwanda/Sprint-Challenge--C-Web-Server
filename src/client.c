@@ -48,6 +48,14 @@ urlinfo_t *parse_url(char *url)
   ///////////////////
   // IMPLEMENT ME! //
   ///////////////////
+  char *afterslash = strchr(hostname, '/'); //afterslash
+  // printf("afterslash %s", afterslash);
+  path = afterslash + 1;
+  afterslash = '\0';
+
+  char *firstcolon = strchr(url, ':');
+  port = firstcolon + 1;
+  firstcolon = '\0';
 
   return urlinfo;
 }
