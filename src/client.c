@@ -6,7 +6,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include "lib.h"
-#include "lib.c"
+// #include "lib.c"
 
 #define BUFSIZE 4096 // max number of bytes we can get at once
 
@@ -51,15 +51,25 @@ urlinfo_t *parse_url(char *url)
   ///////////////////
 
   // https://www.tutorialspoint.com/c_standard_library/c_function_strchr.htm
+  printf("hostname %s\n", hostname);
 
+  //PATH d20
   char *afterslash = strchr(hostname, '/'); //afterslash
-  // printf("afterslash %s", afterslash);
   path = afterslash + 1;
   afterslash = '\0';
+  printf("path %s\n", path);
+  printf("hostname %s\n", hostname);
 
-  char *firstcolon = strchr(url, ':');
+  //PORT 3490
+  char *firstcolon = strchr(hostname, ':');
   port = firstcolon + 1;
   firstcolon = '\0';
+  printf("port %s\n", port);
+  printf("hostname %s\n", hostname);
+
+  urlinfo->hostname = hostname;
+  urlinfo->port = port;
+  urlinfo->path = path;
 
   return urlinfo;
 }
@@ -96,10 +106,12 @@ int send_request(int fd, char *hostname, char *port, char *path)
   int rv = send(fd, request, request_length, 0);
 
   if (rv < 0) {
-      perror("send");
+      perror("request");
   }
 
   return rv;
+
+  return 0;
 
 }
 
@@ -125,17 +137,7 @@ int main(int argc, char *argv[])
   // IMPLEMENT ME! //
   ///////////////////
 
-  urlinfo_t *url = parse_url(argv[1]); //struct urlinfo
-  sockfd = get_socket(url->hostname, url->port);
-
-  numbytes = send_request(sockfd, url->hostname, url->port, url->path);
-
-  while ((numbytes = recv(sockfd, buf, BUFSIZE - 1, 0)) > 0) {
-    // print the data we got back to stdout
-    printf("DATA: %s\n", buf);
-  }
-
-  free(url);
+  parse_url(argv[1]);
 
   return 0;
 }
