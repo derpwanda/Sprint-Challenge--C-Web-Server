@@ -50,22 +50,18 @@ urlinfo_t *parse_url(char *url)
   ///////////////////
   // https://www.tutorialspoint.com/c_standard_library/c_function_strchr.htm
   // localhost:3490/d20
-  // printf("hostname %s\n", hostname);
-  // char *host = strchr(hostname, ":");
-  // host = host + 1;
 
   //PATH d20
   char *firstslash = strchr(hostname, '/'); //afterslash
   path = firstslash + 1;
-  firstslash = '\0';
-  printf("path %s\n", path);
+  *firstslash = '\0';
+  // printf("path %s\n", path);
 
   //PORT 3490
   char *firstcolon = strchr(hostname, ':');
   port = firstcolon + 1;
-  firstcolon = '\0';
-  printf("port %s\n", port);
-
+  *firstcolon = '\0';
+  // printf("port %s\n", port);
 
   // printf("hostname %s\n", hostname);
 
@@ -105,7 +101,9 @@ int send_request(int fd, char *hostname, char *port, char *path)
                 path, 
                 hostname, 
                 port
-                );  
+                ); 
+
+  // printf("request_length: %d\n", request_length); 
 
   rv = send(fd, request, request_length, 0);
 
@@ -141,7 +139,7 @@ int main(int argc, char *argv[])
   // parse_url(argv[1]);
   urlinfo_t *url = malloc(sizeof url);
   url = parse_url(argv[1]); //struct urlinfo
-  // printf("URL: %s", url);
+
   sockfd = get_socket(url->hostname, url->port);
 
   numbytes = send_request(sockfd, url->hostname, url->port, url->path);
@@ -151,14 +149,9 @@ int main(int argc, char *argv[])
     printf("%s\n", buf);
   }
 
-  free(url->path);
-  free(url->port);
-  free(url->hostname);
   free(url);
-
   close(sockfd);
 
   return 0;
 
-  parse_url(argv[1]);
 }
