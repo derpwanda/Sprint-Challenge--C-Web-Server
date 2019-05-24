@@ -48,8 +48,30 @@ urlinfo_t *parse_url(char *url)
   ///////////////////
   // IMPLEMENT ME! //
   ///////////////////
+  // https://www.tutorialspoint.com/c_standard_library/c_function_strchr.htm
+  // printf("hostname %s\n", hostname);
+
+  //PORT 3490
+  char *firstcolon = strchr(hostname, ':');
+  port = firstcolon + 1;
+  firstcolon = '\0';
+  // printf("port %s\n", port);
+
+  //PATH d20
+  char *afterslash = strchr(port, '/'); //afterslash
+  path = afterslash + 1;
+  afterslash = '\0';
+  // printf("path %s\n", path);
+
+
+  // printf("hostname %s\n", hostname);
+
+  // urlinfo->hostname = hostname;
+  urlinfo->port = port;
+  urlinfo->path = path;
 
   return urlinfo;
+
 }
 
 /**
@@ -97,5 +119,5 @@ int main(int argc, char *argv[])
   // IMPLEMENT ME! //
   ///////////////////
 
-  return 0;
+  parse_url(argv[1]);
 }
