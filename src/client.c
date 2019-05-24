@@ -48,6 +48,8 @@ urlinfo_t *parse_url(char *url)
   ///////////////////
   // IMPLEMENT ME! //
   ///////////////////
+  // https://www.tutorialspoint.com/c_standard_library/c_function_strchr.htm
+
   char *afterslash = strchr(hostname, '/'); //afterslash
   // printf("afterslash %s", afterslash);
   path = afterslash + 1;
@@ -74,13 +76,29 @@ int send_request(int fd, char *hostname, char *port, char *path)
 {
   const int max_request_size = 16384;
   char request[max_request_size];
-  int rv;
 
   ///////////////////
   // IMPLEMENT ME! //
   ///////////////////
+  int request_length = sprintf(
+                request,
+                "GET /%s HTTP/1.1\n"
+                "Host: %s:%s\n"
+                "Connection: close\n"
+                "\n",
+                path, 
+                hostname, 
+                port
+                );  
 
-  return 0;
+  int rv = send(fd, request, request_length, 0);
+
+  if (rv < 0) {
+      perror("send");
+  }
+
+  return rv;
+  
 }
 
 int main(int argc, char *argv[])
