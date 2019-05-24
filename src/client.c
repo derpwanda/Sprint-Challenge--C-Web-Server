@@ -49,6 +49,7 @@ urlinfo_t *parse_url(char *url)
   ///////////////////
   // IMPLEMENT ME! //
   ///////////////////
+
   // https://www.tutorialspoint.com/c_standard_library/c_function_strchr.htm
 
   char *afterslash = strchr(hostname, '/'); //afterslash
@@ -127,7 +128,7 @@ int main(int argc, char *argv[])
   urlinfo_t *url = parse_url(argv[1]); //struct urlinfo
   sockfd = get_socket(url->hostname, url->port);
 
-  send_request(sockfd, url->hostname, url->port, url->path);
+  numbytes = send_request(sockfd, url->hostname, url->port, url->path);
 
   while ((numbytes = recv(sockfd, buf, BUFSIZE - 1, 0)) > 0) {
     // print the data we got back to stdout
