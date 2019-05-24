@@ -6,6 +6,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include "lib.h"
+#include "lib.c"
 
 #define BUFSIZE 4096 // max number of bytes we can get at once
 
@@ -98,7 +99,7 @@ int send_request(int fd, char *hostname, char *port, char *path)
   }
 
   return rv;
-  
+
 }
 
 int main(int argc, char *argv[])
@@ -122,6 +123,18 @@ int main(int argc, char *argv[])
   ///////////////////
   // IMPLEMENT ME! //
   ///////////////////
+
+  urlinfo_t *url = parse_url(argv[1]); //struct urlinfo
+  sockfd = get_socket(url->hostname, url->port);
+
+  send_request(sockfd, url->hostname, url->port, url->path);
+
+  while ((numbytes = recv(sockfd, buf, BUFSIZE - 1, 0)) > 0) {
+    // print the data we got back to stdout
+    printf("DATA: %s\n", buf);
+  }
+
+  free(url);
 
   return 0;
 }
